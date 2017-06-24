@@ -8,7 +8,7 @@ function setup() {
     cobrinha = {
         cor: color(255,0,0),
         corpo: [],
-        dir: createVector(-8,0),
+        dir: createVector(0,0),
         cria: function() {
             for(i=0;i<4;i++) {
                 x = tamanho / 2 + i*escala;
@@ -16,6 +16,7 @@ function setup() {
                 q = createVector(x,y);
                 this.corpo.push(q);
             }
+            this.setDir(dirs['a']);
         },
         desenha: function() {
             fill(this.cor)
@@ -31,7 +32,21 @@ function setup() {
             this.corpo.unshift(q);
             
             this.corpo.splice(-1,1);
+        },
+        setDir: function(d) {
+            angulo = degrees(p5.Vector.angleBetween(this.dir,d));
+            if (angulo != 180) {
+                this.dir = d.copy();
+                this.dir.mult(escala);
+            }
         }
+    };
+    
+    dirs = {
+    'w' : createVector(0,-1),
+    'a' : createVector(-1,0),
+    's' : createVector(0,1),
+    'd' : createVector(1,0),
     };
     
     cobrinha.cria();
@@ -41,4 +56,16 @@ function setup() {
 function draw() {
     background(0);
     cobrinha.desenha();
+}
+
+function keyPressed() {
+    switch(key.toLowerCase()) {
+        case 'w':
+        case 'a':
+        case 's':
+        case 'd':
+            d = dirs[key.toLowerCase()];
+            cobrinha.setDir(d);
+            break;
+            }
 }
